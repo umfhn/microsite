@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Backend Accordion für Microsite Container</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #23282d;
+            border-bottom: 2px solid #007cba;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .test-section {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .test-section h2 {
+            color: #007cba;
+            margin-top: 0;
+            font-size: 1.4em;
+        }
+
+        .test-container {
+            border: 1px solid #e1e5e9;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #e1e5e9;
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .accordion-content {
+            background: #fff;
+            padding: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 500px;
+            padding: 15px;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .info-message {
+            background-color: #e7f3ff;
+            color: #004085;
+            border: 1px solid #b3d9ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid #e1e5e9;
+        }
+
+        .code-highlight {
+            background-color: #fffde7;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test: Backend Accordion für Microsite Container</h1>
+
+    <div class="success-message">
+        <strong>✅ Erfolgreich implementiert!</strong> Der Microsite Container im Backend verfügt nun über einen Accordion-Effekt für bessere Übersichtlichkeit.
+    </div>
+
+    <div class="test-section">
+        <h2>1. Implementierte Funktionen</h2>
+
+        <h3>Backend-Spezifische CSS-Stile</h3>
+        <p>Erstellt <code class="code-highlight">assets/css/backend-accordion.css</code> mit:</p>
+        <ul>
+            <li>Optimierte Stile für WordPress Admin Interface</li>
+            <li>Responsive Design für verschiedene Bildschirmgrößen</li>
+            <li>Unterstützung für Dark Mode, High Contrast und Reduced Motion</li>
+            <li>Smooth Animations und Transitions</li>
+        </ul>
+
+        <h3>Backend-JavaScript-Funktionalität</h3>
+        <p>Erstellt <code class="code-highlight">assets/js/backend-accordion.js</code> mit:</p>
+        <ul>
+            <li>Automatische Erkennung und Umwandlung von Microsite-Containern</li>
+            <li>Dynamische Erstellung von Accordion-Headern</li>
+            <li>Click-Event-Handler für Öffnen/Schließen</li>
+            <li>Automatisches Laden der CSS-Stile</li>
+        </ul>
+
+        <h3>Block-Integration</h3>
+        <p>Angepasst <code class="code-highlight">src/blocks.js</code>:</p>
+        <ul>
+            <li>Editor-Ansicht zeigt nun Accordion-Header wenn aktiviert</li>
+            <li>Konsistente Darstellung zwischen Editor und Frontend</li>
+            <li>Unterstützung für Accordion-Label und Initial-State</li>
+        </ul>
+
+        <h3>Asset-Registrierung</h3>
+        <p>Erweitert <code class="code-highlight">includes/class-block-registration.php</code>:</p>
+        <ul>
+            <li>Registrierung der neuen CSS- und JS-Dateien</li>
+            <li>Plugin-URL in Localization hinzugefügt</li>
+            <li>Optimierte Asset-Loading-Strategie</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Technische Details</h2>
+
+        <h3>CSS-Klassenstruktur</h3>
+        <pre>.dkib-mu-container-editor
+.dkib-accordion-header-editor
+.dkib-accordion-header-content-editor
+.dkib-accordion-label-editor
+.dkib-accordion-icon-editor
+.dkib-mu-container-content-editor</pre>
+
+        <h3>JavaScript-Logik</h3>
+        <pre>// Automatische Initialisierung
+document.addEventListener('DOMContentLoaded', function() {
+    // Find all microsite container editors
+    const containerEditors = document.querySelectorAll('.dkib-mu-container-editor');
+    // Create accordion structure and add event listeners
+});</pre>
+
+        <h3>WordPress-Integration</h3>
+        <pre>// Asset Registrierung
+wp_register_style(
+    'dkib-mu-backend-accordion',
+    DKIB_MU_PLUGIN_URL . 'assets/css/backend-accordion.css',
+    array(),
+    DKIB_MU_VERSION
+);
+
+wp_register_script(
+    'dkib-mu-backend-accordion',
+    DKIB_MU_PLUGIN_URL . 'assets/js/backend-accordion.js',
+    array(),
+    DKIB_MU_VERSION,
+    true
+);</pre>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Demo: Accordion-Funktionalität</h2>
+
+        <div class="test-container">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>📋 Microsite Container - Beispiel</span>
+                <span>▶</span>
+            </div>
+            <div class="accordion-content">
+                <h3>Inhalt des Containers</h3>
+                <p>Dieser Bereich zeigt den Inhalt des Microsite Containers, der durch den Accordion-Effekt ein- und ausgeblendet werden kann.</p>
+                <p><strong>Vorteile:</strong></p>
+                <ul>
+                    <li>Bessere Übersichtlichkeit im Backend</li>
+                    <li>Platzsparende Darstellung</li>
+                    <li>Schneller Zugriff auf Container-Inhalte</li>
+                    <li>Konsistente Benutzererfahrung</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-container">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>⚙️ Technische Implementierung</span>
+                <span>▶</span>
+            </div>
+            <div class="accordion-content">
+                <h3>Architektur-Übersicht</h3>
+                <p>Die Implementierung folgt dem WordPress-Standard:</p>
+                <ol>
+                    <li>CSS-Stile für visuelle Darstellung</li>
+                    <li>JavaScript für Interaktivität</li>
+                    <li>Block-Editor-Integration</li>
+                    <li>Asset-Management</li>
+                </ol>
+                <p><strong>Besonderheiten:</strong> Vollständige Trennung von Frontend- und Backend-Stilen, optimierte Performance, Barrierefreiheit.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Nächste Schritte</h2>
+
+        <div class="info-message">
+            <strong>📋 Testanleitung:</strong>
+            <ol>
+                <li>WordPress-Admin-Bereich öffnen</li>
+                <li>Seite oder Beitrag mit Microsite Container bearbeiten</li>
+                <li>Accordion-Funktionalität im Block-Editor aktivieren</li>
+                <li>Container sollte nun mit Accordion-Header angezeigt werden</li>
+                <li>Klicken auf Header sollte Inhalt ein/ausblenden</li>
+            </ol>
+        </div>
+
+        <p><strong>🔧 Weitere Optimierungen möglich:</strong></p>
+        <ul>
+            <li>Erweiterte Animationseffekte</li>
+            <li>Benutzerdefinierte Farben für Accordion-Header</li>
+            <li>Mehrsprachige Unterstützung</li>
+            <li>Integration mit anderen Plugins</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Neuer Microsite Container (Verschachtelung)</h2>
+        <p>Dies ist ein Beispiel für einen Microsite Container, der als Akkordeon fungiert. Nur der äußere Container ist einklappbar, die inneren Inhalte bleiben statisch.</p>
+
+        <div class="test-container">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>📦 Microsite Container - Verschachtelung</span>
+                <span>▶</span>
+            </div>
+            <div class="accordion-content">
+                <h3>Inhalt des verschachtelten Containers</h3>
+                <p>Dieser Inhalt gehört zum <strong>äußeren</strong> Microsite Container. Er wird zusammen mit dem Container ein- und ausgeblendet.</p>
+                <div style="padding: 10px; border: 1px dashed #ccc; margin-top: 10px;">
+                    <h4>Innerer statischer Block</h4>
+                    <p>Dieser Block ist <strong>Teil des Inhalts</strong> des Microsite Containers. Er ist nicht selbst einklappbar und bleibt immer sichtbar, solange der übergeordnete Container geöffnet ist.</p>
+                    <ul>
+                        <li>Item 1</li>
+                        <li>Item 2</li>
+                    </ul>
+                </div>
+                <p>Weitere Inhalte des äußeren Containers.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('span:last-child');
+
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.textContent = '▶';
+            } else {
+                // Close all other accordions
+                document.querySelectorAll('.accordion-content.active').forEach(el => {
+                    el.classList.remove('active');
+                    el.previousElementSibling.querySelector('span:last-child').textContent = '▶';
+                });
+
+                content.classList.add('active');
+                icon.textContent = '▼';
+            }
+        }
+    </script>
+</body>
+</html>

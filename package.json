@@ -1,0 +1,24 @@
+{
+  "name": "dkib-mu-sitebuilder",
+  "version": "1.4.1",
+  "description": "dKip Microsite Builder - Container-basierte Microsites mit GEO/SEO und KI-Unterstützung",
+  "author": "dKip Team",
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build": "wp-scripts build src/blocks.js --output-path=assets/js",
+    "start": "wp-scripts start src/blocks.js --output-path=assets/js",
+    "format": "wp-scripts format",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update",
+    "bump-patch": "node scripts/bump-version.js patch",
+    "bump-minor": "node scripts/bump-version.js minor",
+    "bump-major": "node scripts/bump-version.js major",
+    "build-zip": "node scripts/build-zip.js"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^26.0.0"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1"
+  }
+}

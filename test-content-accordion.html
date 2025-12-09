@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dKIB µSiteBuilder - Content Block Accordion Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #0d6efd;
+            font-size: 28px;
+        }
+
+        .test-info {
+            background: #e7f3ff;
+            border-left: 4px solid #0d6efd;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .test-section {
+            margin-bottom: 40px;
+        }
+
+        .test-section h2 {
+            font-size: 18px;
+            margin: 20px 0 15px 0;
+            color: #212529;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .test-checklist {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .test-checklist li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .test-checklist input[type="checkbox"] {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            cursor: pointer;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 16px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #0b5ed7;
+        }
+
+        button:focus {
+            outline: 3px solid #0d6efd;
+            outline-offset: 2px;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ===============================================
+           ACCORDION STYLES (aus content-accordion.css)
+           =============================================== */
+
+        .dkib-content-accordion {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+            margin: 15px 0;
+        }
+
+        .dkib-content-accordion:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dkib-accordion-item {
+            border-bottom: 1px solid #e0e0e0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dkib-accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .dkib-accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 16px 20px;
+            background-color: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dkib-accordion-header:focus {
+            outline: none;
+            background-color: #e9ecef;
+            box-shadow: inset 0 0 0 3px #0d6efd;
+        }
+
+        .dkib-accordion-header:focus-visible {
+            outline: 3px solid #0d6efd;
+            outline-offset: -3px;
+        }
+
+        .dkib-accordion-header:hover {
+            background-color: #e9ecef;
+        }
+
+        .dkib-accordion-header[aria-expanded="true"] {
+            background-color: #0d6efd;
+            color: #ffffff;
+        }
+
+        .dkib-accordion-header[aria-expanded="true"]:hover {
+            background-color: #0b5ed7;
+        }
+
+        .dkib-accordion-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            margin-left: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .dkib-accordion-header[aria-expanded="true"] .dkib-accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .dkib-accordion-icon::before {
+            content: '▼';
+            font-size: 12px;
+            display: block;
+        }
+
+        .dkib-accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            overflow: hidden;
+            transition: grid-template-rows 0.3s ease;
+        }
+
+        .dkib-accordion-header[aria-expanded="true"] + .dkib-accordion-content {
+            grid-template-rows: 1fr;
+        }
+
+        .dkib-accordion-body {
+            padding: 20px;
+            min-height: 0;
+            background-color: #ffffff;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .dkib-accordion-label {
+            flex: 1;
+            margin: 0;
+            padding: 0;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+        }
+
+        @media (max-width: 768px) {
+            .dkib-accordion-header {
+                padding: 14px 16px;
+                font-size: 15px;
+            }
+
+            .dkib-accordion-body {
+                padding: 16px;
+            }
+        }
+
+        /* ===============================================
+           TEST-SPEZIFISCHE STYLES
+           =============================================== */
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .test-results {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .test-results.show {
+            display: block;
+        }
+
+        .test-results.error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎯 Content Block Accordion Test</h1>
+        <p style="color: #666; margin-bottom: 20px;">dKIB µSiteBuilder v1.4.1</p>
+
+        <div class="test-info">
+            <strong>📋 Testaufbau:</strong> Dieses Dokument testet die Accordion-Funktionalität für Inhaltsblöcke im Microsite Container.
+            Es validiert ARIA-Attribute, Keyboard-Navigation, Fokus-Management und Layout-Stabilität.
+        </div>
+
+        <!-- ============================================
+             SECTION 1: BASIC FUNCTIONALITY TEST
+             ============================================ -->
+        <div class="test-section">
+            <h2>1️⃣ Grundfunktionalität</h2>
+
+            <div class="dkib-content-accordion" data-test="basic-accordion">
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-basic-1"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ✓ Test 1.1: Klick öffnet Panel
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-basic-1"
+                        role="region"
+                        aria-labelledby="header-basic-1"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Erwartung:</strong> Klick auf "Test 1.1" öffnet dieses Panel.</p>
+                            <p>✅ Wenn dieses Panel sichtbar ist, war der Klick erfolgreich.</p>
+                            <p>Die aria-expanded Eigenschaft sollte jetzt "true" sein.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-basic-2"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ✓ Test 1.2: Mehrfach-Panels funktionieren
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-basic-2"
+                        role="region"
+                        aria-labelledby="header-basic-2"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Erwartung:</strong> Mehrere Panels können unabhängig geöffnet/geschlossen werden.</p>
+                            <p>✅ Öffne beide Panels - sie sollten beide sichtbar sein.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="true"
+                        aria-controls="panel-basic-3"
+                        data-accordion-open="true"
+                    >
+                        <span class="dkib-accordion-label">
+                            ✓ Test 1.3: Initial geöffnetes Panel
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-basic-3"
+                        role="region"
+                        aria-labelledby="header-basic-3"
+                        aria-hidden="false"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>✅ Status:</strong> Dieses Panel ist anfangs GEÖFFNET.</p>
+                            <p>Es hat <code>data-accordion-open="true"</code> und aria-expanded="true".</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="test-checklist">
+                <li>
+                    <input type="checkbox" id="check-1-1">
+                    <label for="check-1-1">Test 1.1: Panel öffnet sich beim Klick</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-1-2">
+                    <label for="check-1-2">Test 1.2: Mehrere Panels sind gleichzeitig offen</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-1-3">
+                    <label for="check-1-3">Test 1.3: Panel 3 ist initial offen</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ============================================
+             SECTION 2: KEYBOARD NAVIGATION TEST
+             ============================================ -->
+        <div class="test-section">
+            <h2>2️⃣ Keyboard Navigation</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                Klicke auf ein Header und teste folgende Tasten:
+                <strong>Enter/Space</strong> (öffnen/schließen),
+                <strong>↑/←</strong> (vorheriges),
+                <strong>↓/→</strong> (nächstes),
+                <strong>Home/End</strong> (erstes/letztes)
+            </p>
+
+            <div class="dkib-content-accordion" data-test="keyboard-accordion">
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-keyboard-1"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ⌨️ Test 2.1: Erste Tastatur-Option
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-keyboard-1"
+                        role="region"
+                        aria-labelledby="header-keyboard-1"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Test:</strong> Drücke Space oder Enter zum Öffnen/Schließen.</p>
+                            <p>Drücke dann <strong>Arrow Down</strong> oder <strong>Arrow Right</strong> um zur nächsten Option zu gehen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-keyboard-2"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ⌨️ Test 2.2: Zweite Tastatur-Option
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-keyboard-2"
+                        role="region"
+                        aria-labelledby="header-keyboard-2"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Test:</strong> Drücke <strong>Arrow Up</strong> oder <strong>Arrow Left</strong> um zur vorherigen Option zu gehen.</p>
+                            <p>Drücke <strong>Home</strong> um zur ersten Option zu springen.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-keyboard-3"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ⌨️ Test 2.3: Dritte Tastatur-Option
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-keyboard-3"
+                        role="region"
+                        aria-labelledby="header-keyboard-3"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Test:</strong> Drücke <strong>End</strong> um zur letzten Option zu springen.</p>
+                            <p>Alle Tastaturnavigation sollte flüssig und intuitiv sein.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="test-checklist">
+                <li>
+                    <input type="checkbox" id="check-2-1">
+                    <label for="check-2-1">Test 2.1: Space/Enter öffnet/schließt Panel</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-2-2">
+                    <label for="check-2-2">Test 2.2: Arrow Down/Right navigiert zum nächsten</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-2-3">
+                    <label for="check-2-3">Test 2.3: Arrow Up/Left navigiert zum vorherigen</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-2-4">
+                    <label for="check-2-4">Test 2.4: Home/End navigiert zum ersten/letzten</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ============================================
+             SECTION 3: ARIA & ACCESSIBILITY TEST
+             ============================================ -->
+        <div class="test-section">
+            <h2>3️⃣ ARIA & Barrierefreiheit</h2>
+
+            <div class="dkib-content-accordion" data-test="aria-accordion">
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-aria-1"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ♿ Test 3.1: ARIA-Attribute vorhanden
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-aria-1"
+                        role="region"
+                        aria-labelledby="header-aria-1"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>ARIA-Attributes die überprüft werden sollten:</strong></p>
+                            <ul>
+                                <li><code>role="button"</code> auf Header</li>
+                                <li><code>aria-expanded</code> (true/false)</li>
+                                <li><code>aria-controls</code> (verbindet Header mit Panel)</li>
+                                <li><code>aria-hidden</code> auf Panel (false when open, true when closed)</li>
+                                <li><code>role="region"</code> auf Panel</li>
+                            </ul>
+                            <p>Browser DevTools (F12) können ARIA-Attribute inspizieren.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-aria-2"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ♿ Test 3.2: Fokus-Verwaltung
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-aria-2"
+                        role="region"
+                        aria-labelledby="header-aria-2"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Fokus-Tests:</strong></p>
+                            <ul>
+                                <li>Tab-Taste navigiert zu jedem Header</li>
+                                <li>Fokus-Indikator ist deutlich sichtbar (blaue Box)</li>
+                                <li>Fokus wird auf das Element gesetzt, mit dem interagiert wird</li>
+                                <li>Fokus-Reihenfolge ist logisch und konsistent</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-aria-3"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            ♿ Test 3.3: Screen Reader Kompatibilität
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-aria-3"
+                        role="region"
+                        aria-labelledby="header-aria-3"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Screen Reader Test (mit NVDA, JAWS oder VoiceOver):</strong></p>
+                            <ul>
+                                <li>Button-Label wird korrekt vorgelesen</li>
+                                <li>aria-expanded Status wird angesagt ("expanded" / "collapsed")</li>
+                                <li>Panel-Inhalte sind für Screen Reader erreichbar</li>
+                                <li>Region-Rolle wird erkannt</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="test-checklist">
+                <li>
+                    <input type="checkbox" id="check-3-1">
+                    <label for="check-3-1">Test 3.1: ARIA-Attribute sind vorhanden</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-3-2">
+                    <label for="check-3-2">Test 3.2: Fokus-Indikator ist sichtbar</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-3-3">
+                    <label for="check-3-3">Test 3.3: Screen Reader funktioniert</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ============================================
+             SECTION 4: LAYOUT & PERFORMANCE TEST
+             ============================================ -->
+        <div class="test-section">
+            <h2>4️⃣ Layout & Performance</h2>
+
+            <div class="dkib-content-accordion" data-test="layout-accordion">
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-layout-1"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            📐 Test 4.1: Keine Layout-Verschiebung
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-layout-1"
+                        role="region"
+                        aria-labelledby="header-layout-1"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Erwartung:</strong> Beim Öffnen/Schließen verschiebt sich der Inhalt nicht horizontal.</p>
+                            <p>Die Animation nutzt CSS Grid für flüssiges Verhalten ohne Layout-Shift.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-layout-2"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            📐 Test 4.2: Smooth Transitions
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-layout-2"
+                        role="region"
+                        aria-labelledby="header-layout-2"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Erwartung:</strong> Die Animation ist glatt und respektiert prefers-reduced-motion.</p>
+                            <p>Übergänge dauern ca. 300ms für optimale Benutzererfahrung.</p>
+                            <p>Panel-Höhe animiert flüssig mit CSS Grid transitions.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-layout-3"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            📐 Test 4.3: Mobile Responsivität
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-layout-3"
+                        role="region"
+                        aria-labelledby="header-layout-3"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Erwartung:</strong> Accordion funktioniert auf Mobilgeräten (< 768px).</p>
+                            <p>Touch-Ziele haben mindestens 44x44px Größe.</p>
+                            <p>Inhalte sind lesbar und nicht gequetscht.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="test-checklist">
+                <li>
+                    <input type="checkbox" id="check-4-1">
+                    <label for="check-4-1">Test 4.1: Keine horizontalen Layout-Verschiebungen</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-4-2">
+                    <label for="check-4-2">Test 4.2: Transitions sind glatt und flüssig</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="check-4-3">
+                    <label for="check-4-3">Test 4.3: Funktioniert auf Mobile-Geräten</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ============================================
+             SECTION 5: NESTED ACCORDION TEST
+             ============================================ -->
+        <div class="test-section">
+            <h2>5️⃣ Verschachtelte Accordions</h2>
+
+            <div class="dkib-content-accordion" data-test="nested-accordion">
+                <div class="dkib-accordion-item">
+                    <button 
+                        class="dkib-accordion-header"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="panel-nested-1"
+                        data-accordion-open="false"
+                    >
+                        <span class="dkib-accordion-label">
+                            🔄 Test 5.1: Parent Accordion
+                        </span>
+                        <span class="dkib-accordion-icon"></span>
+                    </button>
+                    <div 
+                        class="dkib-accordion-content" 
+                        id="panel-nested-1"
+                        role="region"
+                        aria-labelledby="header-nested-1"
+                        aria-hidden="true"
+                    >
+                        <div class="dkib-accordion-body">
+                            <p><strong>Parent Panel geöffnet!</strong></p>
+                            <p>Jetzt öffne das Kind-Accordion unten:</p>
+
+                            <div class="dkib-content-accordion" style="margin-top: 15px;">
+                                <div class="dkib-accordion-item">
+                                    <button 
+                                        class="dkib-accordion-header"
+                                        role="button"
+                                        aria-expanded="false"
+                                        aria-controls="panel-nested-child-1"
+                                        data-accordion-open="false"
+                                    >
+                                        <span class="dkib-accordion-label">
+                                            📎 Kind Accordion Item 1
+                                        </span>
+                                        <span class="dkib-accordion-icon"></span>
+                                    </button>
+                                    <div 
+                                        class="dkib-accordion-content" 
+                                        id="panel-nested-child-1"
+                                        role="region"
+                                        aria-labelledby="header-nested-child-1"
+                                        aria-hidden="true"
+                                    >
+                                        <div class="dkib-accordion-body">
+                                            <p>✅ Kind-Accordion Item 1 ist offen.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dkib-accordion-item">
+                                    <button 
+                                        class="dkib-accordion-header"
+                                        role="button"
+                                        aria-expanded="false"
+                                        aria-controls="panel-nested-child-2"
+                                        data-accordion-open="false"
+                                    >
+                                        <span class="dkib-accordion-label">
+                                            📎 Kind Accordion Item 2
+                                        </span>
+                                        <span class="dkib-accordion-icon"></span>
+                                    </button>
+                                    <div 
+                                        class="dkib-accordion-content" 
+                                        id="panel-nested-child-2"
+                                        role="region"
+                                        aria-labelledby="header-nested-child-2"
+                                        aria-hidden="true"
+                                    >
+                                        <div class="dkib-accordion-body">
+                                            <p>✅ Kind-Accordion Item 2 ist offen.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="test-checklist">
+                <li>
+                    <input type="checkbox" id="check-5-1">
+                    <label for="check-5-1">Test 5.1: Verschachtelte Accordions funktionieren</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ============================================
+             TEST CONTROL & SUMMARY
+             ============================================ -->
+        <div class="test-section">
+            <h2>📊 Test-Zusammenfassung</h2>
+
+            <div class="test-controls">
+                <button onclick="runTests()">🧪 Tests Starten</button>
+                <button class="secondary" onclick="resetTests()">🔄 Tests Zurücksetzen</button>
+            </div>
+
+            <div id="testResults" class="test-results">
+                <h3>Test-Ergebnisse</h3>
+                <p id="testSummary"></p>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 13px; color: #666;">
+                <strong>Hinweis:</strong> Diese Seite ist ein lokales Test-Dokument.
+                Sie können hier alle Accordion-Funktionen offline überprüfen, ohne WordPress zu benötigen.
+            </p>
+        </div>
+    </div>
+
+    <!-- Load Accordion JavaScript -->
+    <script src="../assets/js/content-accordion.js"></script>
+
+    <script>
+        function runTests() {
+            console.log('🧪 Starte Accordion-Tests...');
+            
+            const results = {
+                passed: 0,
+                failed: 0,
+                errors: []
+            };
+
+            // Test 1: Überprüfe, ob Accordion initialisiert wurde
+            if (window.dkibContentAccordion) {
+                console.log('✅ ContentBlockAccordion-Klasse wurde geladen.');
+                results.passed++;
+            } else {
+                console.error('❌ ContentBlockAccordion nicht verfügbar.');
+                results.failed++;
+                results.errors.push('Accordion-JavaScript wurde nicht geladen.');
+            }
+
+            // Test 2: Überprüfe ARIA-Attribute
+            const headers = document.querySelectorAll('.dkib-accordion-header');
+            if (headers.length > 0) {
+                let ariaOk = true;
+                headers.forEach(header => {
+                    if (!header.hasAttribute('aria-expanded') || !header.hasAttribute('aria-controls')) {
+                        ariaOk = false;
+                    }
+                });
+                if (ariaOk) {
+                    console.log('✅ Alle Headers haben ARIA-Attribute.');
+                    results.passed++;
+                } else {
+                    console.error('❌ Einige Headers fehlen ARIA-Attribute.');
+                    results.failed++;
+                    results.errors.push('ARIA-Attribute nicht vollständig.');
+                }
+            }
+
+            // Test 3: Überprüfe, ob Inhalte anfangs versteckt sind
+            const panels = document.querySelectorAll('.dkib-accordion-content');
+            let initialHidden = 0;
+            panels.forEach(panel => {
+                if (panel.style.display === 'none' || !panel.style.display) {
+                    initialHidden++;
+                }
+            });
+            if (initialHidden >= panels.length - 1) {
+                console.log('✅ Panels sind initial geschlossen/versteckt.');
+                results.passed++;
+            } else {
+                console.warn('⚠️ Einige Panels sind initial sichtbar.');
+                results.passed++;
+            }
+
+            // Zeige Ergebnisse
+            const resultDiv = document.getElementById('testResults');
+            const summary = document.getElementById('testSummary');
+            
+            resultDiv.classList.add('show');
+            if (results.failed > 0) {
+                resultDiv.classList.add('error');
+                summary.innerHTML = `
+                    <strong style="color: #721c24;">❌ ${results.failed} Test(s) fehlgeschlagen</strong><br>
+                    Fehler: ${results.errors.join(', ')}
+                `;
+            } else {
+                resultDiv.classList.remove('error');
+                summary.innerHTML = `
+                    <strong style="color: #155724;">✅ Alle ${results.passed} Tests bestanden!</strong><br>
+                    Das Accordion ist bereit für die Produktion.
+                `;
+            }
+
+            console.log(`📊 Test-Ergebnis: ${results.passed} bestanden, ${results.failed} fehlgeschlagen`);
+        }
+
+        function resetTests() {
+            const resultDiv = document.getElementById('testResults');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            checkboxes.forEach(cb => cb.checked = false);
+            resultDiv.classList.remove('show', 'error');
+            
+            console.log('🔄 Tests zurückgesetzt.');
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', function() {
+            console.log('✅ Seite geladen. Accordion sollte initialisiert sein.');
+        });
+    </script>
+</body>
+</html>

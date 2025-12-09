@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dKIB Akkordeon Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h3 {
+            color: #0073aa;
+            margin-top: 0;
+        }
+
+        /* ===== TEST 1: Native <details> Element ===== */
+        .dkib-accordion {
+            border: 1px solid #e1e5e9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .dkib-accordion summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 1px solid #e1e5e9;
+            padding: 16px 20px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .dkib-accordion summary:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .dkib-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .dkib-accordion summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .dkib-accordion[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .dkib-accordion[open] summary {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-bottom-color: #90caf9;
+        }
+
+        .dkib-accordion-content {
+            padding: 20px;
+            background: #fff;
+            animation: slideDown 0.3s ease forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid;
+            border-radius: 2px;
+        }
+
+        .status.pass {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .status.fail {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            border-color: #0c5460;
+            color: #0c5460;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        button {
+            background: #0073aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px 5px 5px 0;
+        }
+
+        button:hover {
+            background: #005a87;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 dKIB Akkordeon - Minimaltest</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Natives &lt;details&gt; Element</h3>
+        <p>Die einfachste HTML-Lösung. Sollte IMMER funktionieren.</p>
+        
+        <details class="dkib-accordion">
+            <summary>Akkordeon 1 - Klicken Sie hier</summary>
+            <div class="dkib-accordion-content">
+                <p>✅ Akkordeon 1 Inhalt</p>
+                <p>Wenn Sie diesen Text sehen, funktioniert das erste Akkordeon!</p>
+            </div>
+        </details>
+
+        <details class="dkib-accordion">
+            <summary>Akkordeon 2 - Klicken Sie hier</summary>
+            <div class="dkib-accordion-content">
+                <p>✅ Akkordeon 2 Inhalt</p>
+                <p>Wenn Sie diesen Text sehen, funktioniert das zweite Akkordeon!</p>
+            </div>
+        </details>
+
+        <details class="dkib-accordion">
+            <summary>Akkordeon 3 - Klicken Sie hier</summary>
+            <div class="dkib-accordion-content">
+                <p>✅ Akkordeon 3 Inhalt</p>
+                <p>Wenn Sie diesen Text sehen, funktioniert das dritte Akkordeon!</p>
+            </div>
+        </details>
+
+        <div id="test1-status" class="status info">
+            Testen Sie: Klicken Sie auf die Akkordeons. Was passiert?
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test 2: Mit JavaScript - "Nur Eines Offen"</h3>
+        <p>JavaScript erzwingt: Maximal ein Akkordeon gleichzeitig offen.</p>
+        
+        <details class="dkib-accordion-exclusive">
+            <summary>Akkordeon A</summary>
+            <div class="dkib-accordion-content">
+                <p>✅ Akkordeon A Inhalt</p>
+            </div>
+        </details>
+
+        <details class="dkib-accordion-exclusive">
+            <summary>Akkordeon B</summary>
+            <div class="dkib-accordion-content">
+                <p>✅ Akkordeon B Inhalt</p>
+            </div>
+        </details>
+
+        <details class="dkib-accordion-exclusive">
+            <summary>Akkordeon C</summary>
+            <div class="dkib-accordion-content">
+                <p>✅ Akkordeon C Inhalt</p>
+            </div>
+        </details>
+
+        <div id="test2-status" class="status info">
+            Testen Sie: Öffnen Sie ein Akkordeon, dann ein anderes. Das erste sollte automatisch schließen!
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Diagnose & Logs</h3>
+        <div id="logs" style="background: #f4f4f4; padding: 15px; border-radius: 4px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 0.85em;">
+            <p>Logs werden hier angezeigt...</p>
+        </div>
+    </div>
+
+    <script>
+        // ===== Logging System =====
+        const logsDiv = document.getElementById('logs');
+        const logs = [];
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            logs.push(logEntry);
+            
+            logsDiv.innerHTML = logs.map(log => `<div>${log}</div>`).join('');
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            
+            console.log(logEntry);
+        }
+
+        // ===== Test 1: Native Details =====
+        addLog('✅ Test 1 geladen: Native &lt;details&gt; Elemente');
+        
+        const test1Accordions = document.querySelectorAll('.dkib-accordion');
+        addLog(`Found ${test1Accordions.length} test 1 accordions`, 'info');
+
+        // ===== Test 2: Exclusive Accordion =====
+        addLog('✅ Test 2 geladen: Exclusive Accordion (nur eines offen)');
+        
+        const exclusiveAccordions = document.querySelectorAll('.dkib-accordion-exclusive');
+        addLog(`Found ${exclusiveAccordions.length} exclusive accordions`, 'info');
+
+        exclusiveAccordions.forEach((accordion, index) => {
+            accordion.addEventListener('toggle', function(event) {
+                addLog(`Akkordeon ${index + 1} toggled: ${this.open ? 'OPEN' : 'CLOSED'}`, 'info');
+                
+                if (this.open) {
+                    // Close all others
+                    exclusiveAccordions.forEach(other => {
+                        if (other !== this && other.open) {
+                            addLog(`→ Closing accordion (${exclusiveAccordions.length - index})`, 'info');
+                            other.removeAttribute('open');
+                        }
+                    });
+                }
+            });
+        });
+
+        addLog('✅ Event Listeners registriert', 'info');
+
+        // ===== DOM Ready =====
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('✅ DOM geladen', 'info');
+        });
+
+        // ===== Browser Info =====
+        addLog(`Browser: ${navigator.userAgent.substring(0, 50)}...`, 'info');
+    </script>
+</body>
+</html>
